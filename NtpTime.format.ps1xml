@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+This format file controls the default display of objects returned by the
+Get-NtpTime cmdlet. These objects are created from information returned
+by simple time queries to a specified NTP server.
+
+Refer to NtpTime.psm1 for full details
+
+Chris Warwick, @cjwarwickps, September 2015
+-->
+
+<Configuration>
+    <ViewDefinitions>
+        
+        <View>
+            
+            <Name>NtpTime</Name>
+            <ViewSelectedBy>
+                <TypeName>NtpTime</TypeName>
+            </ViewSelectedBy>
+            
+            <TableControl>
+                
+                <TableHeaders>
+                    <TableColumnHeader><Width>25</Width></TableColumnHeader>
+                    <TableColumnHeader><Width>19</Width></TableColumnHeader>
+                    <TableColumnHeader>
+                        <Width>15</Width>
+                        <Alignment>Right</Alignment>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Width>7</Width>
+                        <Alignment>Right</Alignment>
+                    </TableColumnHeader>
+                    <TableColumnHeader><Width>35</Width></TableColumnHeader>
+                </TableHeaders>
+                
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>NtpServer</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>NtpTime</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>OffsetSeconds</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Stratum</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ReferenceIdentifier</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                 </TableRowEntries>
+
+            </TableControl>
+        </View>
+
+        <View>
+            
+            <Name>NtpTime</Name>
+            <ViewSelectedBy>
+                <TypeName>NtpTime</TypeName>
+            </ViewSelectedBy>
+            
+            <ListControl>
+
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem><PropertyName>NtpServer</PropertyName></ListItem>
+                            <ListItem><PropertyName>NtpTime</PropertyName></ListItem>
+                            <ListItem><PropertyName>OffsetSeconds</PropertyName></ListItem>
+                            <ListItem><PropertyName>Delay</PropertyName></ListItem>
+                            <ListItem><PropertyName>Mode_text</PropertyName></ListItem>
+                            <ListItem><PropertyName>NtpVersionNumber</PropertyName></ListItem>
+                            <ListItem><PropertyName>Stratum</PropertyName></ListItem>
+                            <ListItem><PropertyName>ReferenceIdentifier</PropertyName></ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+
+            </ListControl>
+        </View>
+
+    </ViewDefinitions>
+</Configuration>

@@ -100,7 +100,7 @@ Function Get-NtpTime {
 #>
 
     [CmdletBinding()]
-    [OutputType()]
+    [OutputType('NtpTime')]
     Param (
         [String]$Server = 'pool.ntp.org',
         [Int]$MaxOffset = 10000,     # (Milliseconds) Throw exception if network time offset is larger
@@ -112,8 +112,9 @@ Function Get-NtpTime {
     $StartOfEpoch = New-Object -TypeName DateTime -ArgumentList (1900,1,1,0,0,0,[DateTimeKind]::Utc)
 
 
-    Function OffsetToLocal($Offset) {
-    # Convert milliseconds since midnight on 1/1/1900 to local time
+    Function Convert-OffsetToLocal {
+    Param ([Long]$Offset)
+        # Convert milliseconds since midnight on 1/1/1900 to local time
         $StartOfEpoch.AddMilliseconds($Offset).ToLocalTime()
     }
 
@@ -158,7 +159,7 @@ Function Get-NtpTime {
 
 # End of NTP Transaction ------------------------------------------------
 
-    $Socket.Shutdown("Both") 
+    $Socket.Shutdown('Both') 
     $Socket.Close()
 
 # We now have an NTP response packet in $NtpData to decode.  Start with the LI flag
@@ -328,49 +329,46 @@ Function Get-NtpTime {
     $RootDispersion = [BitConverter]::ToUInt32($NtpData[11..8],0) / 0x10000
 
 
-    # Finally, create output object and return
+    # Finally, create the NtpTime custom output object and pass it to the output
+    
+    [PSCustomObject]@{
+        
+        PsTypeName = 'NtpTime'
 
-    $NtpTimeObj = [PSCustomObject]@{
-        NtpServer = $Server
-        NtpTime = OffsetToLocal($t4ms + $Offset)
-        Offset = $Offset
-        OffsetSeconds = [Math]::Round($Offset/1000, 3)
-        Delay = $Delay
+        NtpServer           = $Server
+        NtpTime             = Convert-OffsetToLocal($t4ms + $Offset)
+        Offset              = $Offset
+        OffsetSeconds       = [Math]::Round($Offset/1000, 3)
+        Delay               = $Delay
+        ReferenceIdentifier = $ReferenceIdentifier
+
+        LI      = $LI
+        LI_text = $LI_text
+
+        NtpVersionNumber = $VN
+        Mode             = $Mode
+        Mode_text        = $Mode_text
+        Stratum          = $Stratum
+        Stratum_text     = $Stratum_text
+
         t1ms = $t1ms
         t2ms = $t2ms
         t3ms = $t3ms
         t4ms = $t4ms
-        t1 = OffsetToLocal($t1ms)
-        t2 = OffsetToLocal($t2ms)
-        t3 = OffsetToLocal($t3ms)
-        t4 = OffsetToLocal($t4ms)
-        LI = $LI
-        LI_text = $LI_text
-        NtpVersionNumber = $VN
-        Mode = $Mode
-        Mode_text = $Mode_text
-        Stratum = $Stratum
-        Stratum_text = $Stratum_text
-        PollIntervalRaw = $PollInterval
-        PollInterval = New-Object -TypeName TimeSpan -ArgumentList (0,0,$PollIntervalSeconds)
-        Precision = $Precision
-        PrecisionSeconds = $PrecisionSeconds
-        ReferenceIdentifier = $ReferenceIdentifier
-        RootDelay = $RootDelay
-        RootDispersion = $RootDispersion
+        t1   = Convert-OffsetToLocal($t1ms)
+        t2   = Convert-OffsetToLocal($t2ms)
+        t3   = Convert-OffsetToLocal($t3ms)
+        t4   = Convert-OffsetToLocal($t4ms)
+        
+        PollIntervalRaw     = $PollInterval
+        PollInterval        = New-Object -TypeName TimeSpan -ArgumentList (0,0,$PollIntervalSeconds)
+        Precision           = $Precision
+        PrecisionSeconds    = $PrecisionSeconds
+        RootDelay           = $RootDelay
+        RootDispersion      = $RootDispersion
+
         Raw = $NtpData   # The undecoded bytes returned from the NTP server
     }
-
-    # Set the default display properties for the returned object
-    [String[]]$DefaultProperties =  'NtpServer', 'NtpTime', 'OffsetSeconds', 'NtpVersionNumber', 
-                                    'Mode_text', 'Stratum', 'ReferenceIdentifier'
-
-    # Create the PSStandardMembers.DefaultDisplayPropertySet member
-    $ddps = New-Object -TypeName Management.Automation.PSPropertySet -ArgumentList ('DefaultDisplayPropertySet', $DefaultProperties)
-
-    # Attach default display property set and output object
-    $PSStandardMembers = [Management.Automation.PSMemberInfo[]]$ddps 
-    $NtpTimeObj | Add-Member -MemberType MemberSet -Name PSStandardMembers -Value $PSStandardMembers -PassThru
 }
 
 
