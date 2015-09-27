@@ -1,11 +1,12 @@
+﻿#requires -Modules PowerShellGet
 
 
+$ReleaseNotes =@'
 
-PowerShell-NTP-Time
-==
-PowerShell Module to read NTP time from a specified NTP Server
-
+Get-NtpTime
 Chris Warwick, @cjwarwickps, September 2015.
+
+v1.1 release to the PowerShell Gallery.
 
 This module contains a single PS Function 'Get-NtpTime' which sends an NTP request to a specified NTP server and
 decodes the returned raw NTP packet. The function will connect to pool.ntp.org if no server is specified.
@@ -15,28 +16,27 @@ any NTP server.  See rfc-1305: http://www.faqs.org/rfcs/rfc1305.html
 
 Refer to the PowerShell help and additional background information included in the module for further details.
 
-Inline Help
----
+
 .PARAMETER Server
     The NTP Server to contact.  Uses pool.ntp.org by default.
-.PARAMETER MaxOffset
+ .PARAMETER MaxOffset
     The maximum acceptable offset between the local clock and the NTP Server, in milliseconds.
     The script will throw an exception if the time difference exceeds this value (on the assumption
     that the returned time may be incorrect).  Default = 10000 (10s).
-.PARAMETER NoDns
+ .PARAMETER NoDns
     (Switch) If specified do not attempt to resolve Version 3 Secondary Server ReferenceIdentifiers.
-.EXAMPLE
+ .EXAMPLE
     Get-NtpTime uk.pool.ntp.org
     Gets time from the specified server.
-.EXAMPLE
+ .EXAMPLE
     Get-NtpTime | fl *
     Get time from default server (pool.ntp.org) and displays all output object attributes.
 .EXAMPLE
     Get-NtpTime DC01.company.org
     Get time from a domain controller.
 
-Sample Usage
----
+Usage: 
+
  PS:\> Get-NtpTime
 
 
@@ -81,12 +81,13 @@ Sample Usage
  RootDelay           : 0.003143310546875
  RootDispersion      : 0.02679443359375
  Raw                 : {28, 2, 0, 233, 0, 0, 0, 206, 0, 0, 6, 220, 195, 66, 241, 2, 213, 231, 252, 27...}
- 
+
+
  Version History:
- ---
+
  V1.1 (This version)
   - Updated help to reflect usage against domain controllers
-  - Removed default display format code from script and replaced with format.ps1xml file
+  - Removed default display format code from script and replaced with .ps1xml format file
 
  V1.0 (Initial PowerShell Gallery version)
   - Copy with updates from original script
@@ -94,3 +95,36 @@ Sample Usage
  V0.9 (Initial Technet ScriptCenter version)
 
  V0.1-0.8 Dev versions
+
+
+'@
+
+$Tags = @(
+   'NTP'
+   'PowerShell'
+   'SNTP'
+   'Network'
+   'Time'
+   'rfc1305'
+   'rfc2030'
+   'UDP'
+   'ps1xml'
+   'PsCustomObject'
+)
+
+$PublishParams = @{
+    Name            = 'NtpTime'
+    NuGetApiKey     = 'XXXXRedactedXXXX'
+    ReleaseNotes    = $ReleaseNotes
+    Tags            = $Tags
+    ProjectUri      = 'https://github.com/ChrisWarwick/PowerShell-NTP-Time'
+}
+
+
+
+Publish-Module @PublishParams
+
+
+# ...later
+
+# Find-Module NtpTime
