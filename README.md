@@ -2,7 +2,7 @@
 
 
 PowerShell-NTP-Time
-==
+====
 PowerShell Module to read NTP time from a specified NTP Server
 
 Chris Warwick, @cjwarwickps, September 2015.
@@ -16,7 +16,8 @@ any NTP server.  See rfc-1305: http://www.faqs.org/rfcs/rfc1305.html
 Refer to the PowerShell help and additional background information included in the module for further details.
 
 Inline Help
----
+----
+````
 .PARAMETER Server
     The NTP Server to contact.  Uses pool.ntp.org by default.
 .PARAMETER MaxOffset
@@ -34,9 +35,11 @@ Inline Help
 .EXAMPLE
     Get-NtpTime DC01.company.org
     Get time from a domain controller.
+````
+
 
 Sample Usage
----
+----
  PS:\> Get-NtpTime
 
 
