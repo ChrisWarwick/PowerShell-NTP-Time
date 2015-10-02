@@ -40,6 +40,7 @@ Inline Help
 
 Sample Usage
 ----
+````
  PS:\> Get-NtpTime
 
 
@@ -84,6 +85,7 @@ Sample Usage
  RootDelay           : 0.003143310546875
  RootDispersion      : 0.02679443359375
  Raw                 : {28, 2, 0, 233, 0, 0, 0, 206, 0, 0, 6, 220, 195, 66, 241, 2, 213, 231, 252, 27...}
+ ````
  
  Version History:
  ---
